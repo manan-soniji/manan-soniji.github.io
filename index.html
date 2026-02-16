@@ -1,0 +1,1539 @@
+<!doctype html>
+<html lang="en" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Creator Portfolio • Education & Knowledge</title>
+    <meta name="description" content="Premium portfolio website for an education + knowledge content creator." />
+
+    <!-- Tailwind (Play CDN) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    <!-- Tailwind config (fonts + colors) -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ["ui-sans-serif", "system-ui", "-apple-system", "Segoe UI", "Inter", "Roboto", "Helvetica", "Arial", "Apple Color Emoji", "Segoe UI Emoji"],
+                    },
+                    boxShadow: {
+                        glow: "0 0 0 1px rgba(255,255,255,0.06), 0 12px 30px rgba(0,0,0,0.45)",
+                    },
+                    keyframes: {
+                        floaty: {
+                            "0%, 100%": { transform: "translateY(0px)" },
+                            "50%": { transform: "translateY(-10px)" },
+                        },
+                        shimmer: {
+                            "0%": { backgroundPosition: "0% 50%" },
+                            "100%": { backgroundPosition: "100% 50%" },
+                        },
+                        fadeUp: {
+                            "0%": { opacity: 0, transform: "translateY(18px)" },
+                            "100%": { opacity: 1, transform: "translateY(0)" },
+                        },
+                    },
+                    animation: {
+                        floaty: "floaty 6s ease-in-out infinite",
+                        shimmer: "shimmer 10s ease infinite",
+                        fadeUp: "fadeUp 700ms ease-out both",
+                    },
+                },
+            },
+        };
+    </script>
+
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <style>
+        /* --- Premium details (tiny CSS for polish) --- */
+        :root {
+            color-scheme: dark;
+        }
+
+        /* Smooth fade-in on load */
+        body {
+            opacity: 0;
+        }
+
+        body.ready {
+            opacity: 1;
+            transition: opacity 450ms ease;
+        }
+
+        /* Glass effect */
+        .glass {
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.10);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+        }
+
+        /* Subtle noise overlay */
+        .noise::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            opacity: 0.06;
+            mix-blend-mode: overlay;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.7' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)' opacity='.45'/%3E%3C/svg%3E");
+        }
+
+        /* Better focus rings */
+        :focus-visible {
+            outline: none;
+            box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.28);
+            border-radius: 12px;
+        }
+
+        /* Prevent iOS overscroll glow */
+        html,
+        body {
+            overscroll-behavior: none;
+        }
+
+        /* Respect reduced motion */
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation: none !important;
+                transition: none !important;
+                scroll-behavior: auto !important;
+            }
+        }
+
+        .reveal {
+            opacity: 0;
+            transform: translateY(18px);
+            transition: 700ms ease;
+        }
+
+        .reveal.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            border-radius: 999px;
+            border: 1px solid rgba(255, 255, 255, 0.10);
+            background: rgba(255, 255, 255, 0.05);
+            padding: 8px 12px;
+            font-size: 13px;
+            color: rgb(212, 212, 216);
+        }
+
+        .videoCard {
+            border-radius: 28px;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.10);
+            background: rgba(255, 255, 255, 0.05);
+            transition: transform 250ms ease, border-color 250ms ease;
+        }
+
+        .videoCard:hover {
+            transform: translateY(-4px);
+            border-color: rgba(255, 255, 255, 0.18);
+        }
+
+        .thumb {
+            position: relative;
+            height: 180px;
+            overflow: hidden;
+            background: rgba(255, 255, 255, 0.04);
+        }
+
+        .thumbImg {
+            height: 100%;
+            width: 100%;
+            object-fit: cover;
+            transition: transform 350ms ease;
+        }
+
+        .videoCard:hover .thumbImg {
+            transform: scale(1.05);
+        }
+
+        .badge {
+            position: absolute;
+            left: 14px;
+            top: 14px;
+            font-size: 12px;
+            padding: 6px 10px;
+            border-radius: 999px;
+            background: rgba(0, 0, 0, 0.45);
+            border: 1px solid rgba(255, 255, 255, 0.14);
+            backdrop-filter: blur(10px);
+        }
+
+        .play {
+            position: absolute;
+            right: 14px;
+            bottom: 14px;
+            height: 44px;
+            width: 44px;
+            display: grid;
+            place-items: center;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.14);
+            backdrop-filter: blur(10px);
+            transition: transform 250ms ease;
+        }
+
+        .videoCard:hover .play {
+            transform: scale(1.08);
+        }
+
+        /* Filter Buttons */
+        .filterBtn {
+            padding: 10px 14px;
+            border-radius: 999px;
+            font-size: 13px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            background: rgba(255, 255, 255, 0.04);
+            color: rgba(255, 255, 255, 0.80);
+            transition: all 200ms ease;
+        }
+
+        .filterBtn:hover {
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .filter-active {
+            background: rgba(99, 102, 241, 0.20);
+            border-color: rgba(99, 102, 241, 0.35);
+            color: white;
+        }
+
+        /* Reveal Animation */
+        .reveal {
+            opacity: 0;
+            transform: translateY(18px);
+            transition: opacity 700ms ease, transform 700ms ease;
+        }
+
+        .reveal.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Filter Animation */
+        .videoCard {
+            transition: opacity 260ms ease, transform 260ms ease, border-color 250ms ease;
+        }
+
+        .videoCard.hideCard {
+            opacity: 0;
+            transform: translateY(14px);
+            pointer-events: none;
+        }
+
+        .videoCard.showCard {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+
+<body class="min-h-screen bg-zinc-950 text-zinc-100 antialiased">
+    <!-- Background -->
+    <div class="fixed inset-0 -z-10 overflow-hidden">
+        <div class="absolute inset-0 bg-gradient-to-b from-zinc-950 via-zinc-950 to-black"></div>
+
+        <!-- Animated gradient blobs -->
+        <div
+            class="absolute -top-24 -left-24 h-[420px] w-[420px] rounded-full bg-gradient-to-br from-indigo-500/25 via-fuchsia-500/20 to-cyan-400/20 blur-3xl animate-floaty">
+        </div>
+        <div class="absolute top-44 -right-24 h-[520px] w-[520px] rounded-full bg-gradient-to-br from-emerald-400/15 via-sky-400/15 to-violet-500/20 blur-3xl animate-floaty"
+            style="animation-delay: -2s;"></div>
+        <div class="absolute bottom-[-120px] left-[20%] h-[520px] w-[520px] rounded-full bg-gradient-to-br from-amber-400/10 via-rose-500/15 to-indigo-500/15 blur-3xl animate-floaty"
+            style="animation-delay: -4s;"></div>
+
+        <!-- subtle grid -->
+        <div class="absolute inset-0 opacity-[0.07]"
+            style="background-image: linear-gradient(to right, rgba(255,255,255,.12) 1px, transparent 1px), linear-gradient(to bottom, rgba(255,255,255,.12) 1px, transparent 1px); background-size: 56px 56px;">
+        </div>
+    </div>
+
+    <!-- Sticky Navbar -->
+    <header class="sticky top-0 z-50">
+        <nav class="noise relative border-b border-white/10 bg-zinc-950/55 backdrop-blur-xl">
+            <div class="mx-auto flex max-w-6xl items-center justify-between px-4 py-4 sm:px-6">
+                <a href="#home" class="group flex items-center gap-2">
+                    <span
+                        class="grid h-10 w-10 place-items-center rounded-2xl bg-white/5 border border-white/10 shadow-glow">
+                        <i data-lucide="sparkles" class="h-5 w-5 text-indigo-300"></i>
+                    </span>
+                    <div class="leading-tight">
+                        <p class="text-sm font-semibold tracking-wide">CreatorName</p>
+                        <p class="text-xs text-zinc-400">Education • Knowledge</p>
+                    </div>
+                </a>
+
+                <div class="hidden items-center gap-1 md:flex">
+                    <a class="navlink" href="#home">Home</a>
+                    <a class="navlink" href="#about">About</a>
+                    <a class="navlink" href="#channels">Channels</a>
+                    <a class="navlink" href="#videos">Videos</a>
+
+                    <a class="navlink" href="#contact">Contact</a>
+                </div>
+
+                <div class="flex items-center gap-2">
+
+                    <button id="menuBtn"
+                        class="md:hidden inline-flex h-11 w-11 items-center justify-center rounded-2xl bg-white/5 border border-white/10 hover:bg-white/10 transition"
+                        aria-label="Open menu">
+                        <i data-lucide="menu" class="h-5 w-5"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Mobile menu -->
+            <div id="mobileMenu" class="md:hidden hidden border-t border-white/10">
+                <div class="mx-auto max-w-6xl px-4 py-3 sm:px-6">
+                    <div class="grid gap-1">
+                        <a class="navlink block" href="#home">Home</a>
+                        <a class="navlink block" href="#about">About</a>
+                        <a class="navlink block" href="#channels">Channels</a>
+                        <a class="navlink block" href="#videos">Videos</a>
+
+                        <a class="navlink block" href="#contact">Contact</a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Hero -->
+    <main id="home" class="relative">
+        <section class="mx-auto max-w-6xl px-4 pt-10 pb-10 sm:px-6 sm:pt-16">
+            <div class="grid items-center gap-10 lg:grid-cols-2">
+                <div class="animate-fadeUp">
+                    <div
+                        class="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm text-zinc-300">
+                        <span class="inline-flex h-2 w-2 rounded-full bg-emerald-400"></span>
+                        Weekly uploads: Travel Vlogs, Govt Exam Prep & Daily Motivation
+                    </div>
+
+
+                    <h1 class="mt-5 text-4xl font-semibold leading-tight tracking-tight sm:text-5xl">
+                        Modern learning,
+                        <span
+                            class="bg-gradient-to-r from-indigo-300 via-fuchsia-300 to-cyan-300 bg-clip-text text-transparent">explained
+                            simply.</span>
+                    </h1>
+
+                    <p class="mt-4 text-base leading-relaxed text-zinc-300 sm:text-lg">
+                        I’m <span class="font-semibold text-zinc-100">Manan Soni</span> — a Travel Vlogger and
+                        Government Exam
+                        content creator, sharing real travel experiences, study strategies, exam guidance, and daily
+                        motivation
+                        to help you stay consistent and grow.
+                    </p>
+
+
+                    <div class="mt-7 flex flex-col gap-3 sm:flex-row">
+                        <a href="#@lastminutebrushup"
+                            class="inline-flex items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-indigo-500 via-fuchsia-500 to-cyan-500 px-6 py-3 text-sm font-semibold text-zinc-950 shadow-glow hover:opacity-95 transition">
+                            <i data-lucide="play" class="h-4 w-4"></i>
+                            View Channels
+                        </a>
+                        <a href="#manansoni903@gmail.com "
+                            class="inline-flex items-center justify-center gap-2 rounded-2xl border border-white/12 bg-white/5 px-6 py-3 text-sm font-semibold text-zinc-100 hover:bg-white/10 transition">
+                            <i data-lucide="mail" class="h-4 w-4"></i>
+                            Collaborate
+                        </a>
+                    </div>
+
+                    <div class="mt-8 grid grid-cols-3 gap-3">
+                        <div class="glass rounded-3xl p-4 shadow-glow">
+                            <p class="text-xs text-zinc-400">Focus</p>
+                            <p class="mt-1 text-sm font-semibold">Education</p>
+                        </div>
+                        <div class="glass rounded-3xl p-4 shadow-glow">
+                            <p class="text-xs text-zinc-400">Style</p>
+                            <p class="mt-1 text-sm font-semibold">Clarity-first</p>
+                        </div>
+                        <div class="glass rounded-3xl p-4 shadow-glow">
+                            <p class="text-xs text-zinc-400">Output</p>
+                            <p class="mt-1 text-sm font-semibold">Projects</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Hero visual -->
+                <div class="relative">
+                    <div class="glass noise relative overflow-hidden rounded-[28px] p-6 shadow-glow">
+                        <div
+                            class="absolute inset-0 opacity-70 bg-gradient-to-br from-white/6 via-transparent to-white/4">
+                        </div>
+
+                        <div class="relative">
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center gap-3">
+                                    <div
+                                        class="grid h-12 w-12 place-items-center rounded-2xl bg-white/5 border border-white/10">
+                                        <i data-lucide="compass" class="h-6 w-6 text-indigo-200"></i>
+                                    </div>
+                                    <div>
+                                        <p class="text-sm font-semibold">Creator Dashboard</p>
+                                        <p class="text-xs text-zinc-400">Travel + Govt Exam growth</p>
+                                    </div>
+                                </div>
+
+                                <span
+                                    class="rounded-full bg-emerald-400/10 px-3 py-1 text-xs font-medium text-emerald-200 border border-emerald-400/20">
+                                    Growing
+                                </span>
+                            </div>
+
+                            <div class="mt-6 grid gap-4">
+                                <!-- Stats -->
+                                <div class="grid grid-cols-3 gap-3">
+                                    <div class="rounded-3xl border border-white/10 bg-white/5 p-4">
+                                        <p class="text-xs text-zinc-400">Total Subs</p>
+                                        <p class="mt-1 text-lg font-semibold">1.28K</p>
+                                    </div>
+                                    <div class="rounded-3xl border border-white/10 bg-white/5 p-4">
+                                        <p class="text-xs text-zinc-400">Total Views</p>
+                                        <p class="mt-1 text-lg font-semibold">—</p>
+                                    </div>
+                                    <div class="rounded-3xl border border-white/10 bg-white/5 p-4">
+                                        <p class="text-xs text-zinc-400">Videos</p>
+                                        <p class="mt-1 text-lg font-semibold">37</p>
+                                    </div>
+                                </div>
+
+                                <!-- Monthly -->
+                                <div class="rounded-3xl border border-white/10 bg-white/5 p-5">
+                                    <div class="flex items-center justify-between">
+                                        <p class="text-sm font-semibold">This month</p>
+                                        <p class="text-xs text-zinc-400">Last 30 days</p>
+                                    </div>
+
+                                    <div class="mt-4 h-2 w-full overflow-hidden rounded-full bg-white/5">
+                                        <div
+                                            class="h-full w-[42%] rounded-full bg-gradient-to-r from-indigo-400 via-fuchsia-400 to-cyan-300">
+                                        </div>
+                                    </div>
+
+                                    <div class="mt-3 flex items-center justify-between text-xs text-zinc-400">
+                                        <span>+120 subs</span>
+                                        <span>+18K views</span>
+                                    </div>
+                                </div>
+
+                                <!-- Highlights -->
+                                <div class="grid gap-3 sm:grid-cols-2">
+                                    <div class="rounded-3xl border border-white/10 bg-white/5 p-5">
+                                        <div class="flex items-center gap-3">
+                                            <i data-lucide="camera" class="h-5 w-5 text-fuchsia-200"></i>
+                                            <p class="text-sm font-semibold">Travel Stories</p>
+                                        </div>
+                                        <p class="mt-2 text-sm text-zinc-300">
+                                            Real vlogs, hidden places, and honest travel experiences.
+                                        </p>
+                                    </div>
+
+                                    <div class="rounded-3xl border border-white/10 bg-white/5 p-5">
+                                        <div class="flex items-center gap-3">
+                                            <i data-lucide="book-open" class="h-5 w-5 text-emerald-200"></i>
+                                            <p class="text-sm font-semibold">Exam Focus</p>
+                                        </div>
+                                        <p class="mt-2 text-sm text-zinc-300">
+                                            Last-minute revision, smart notes, and government exam strategy.
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Floating badge -->
+                    <div class="absolute -bottom-6 -left-6 hidden sm:block">
+                        <div class="glass rounded-3xl px-5 py-4 shadow-glow">
+                            <div class="flex items-center gap-3">
+                                <div
+                                    class="grid h-11 w-11 place-items-center rounded-2xl bg-white/5 border border-white/10">
+                                    <i data-lucide="award" class="h-5 w-5 text-amber-200"></i>
+                                </div>
+                                <div>
+                                    <p class="text-sm font-semibold">Growing Creator</p>
+                                    <p class="text-xs text-zinc-400">Travel + Govt Exams</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                </div>
+
+            </div>
+        </section>
+
+        <!-- About -->
+        <section id="about" class="py-20">
+            <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+
+                <!-- Heading -->
+                <div class="flex justify-center">
+                    <h2 class="text-2xl font-semibold tracking-tight text-zinc-100 sm:text-3xl overflow-hidden whitespace-nowrap border-r-4 border-zinc-100 pr-4 inline-block"
+                        id="typewriter">
+                        <span class="inline-block" id="typewriter-text"></span>
+                    </h2>
+                </div>
+
+
+                <script>
+                    const typewriterText = "About Me";
+                    const typewriterElement = document.getElementById('typewriter-text');
+                    const typewriterContainer = document.getElementById('typewriter');
+
+                    let i = 0;
+                    function typeWriter() {
+                        if (i < typewriterText.length) {
+                            typewriterElement.textContent += typewriterText.charAt(i);
+                            i++;
+                            setTimeout(typeWriter, 150); // Adjust speed here (100 = fast, 200 = slow)
+                        } else {
+                            // Blink cursor effect
+                            typewriterContainer.classList.remove('border-zinc-100');
+                            typewriterContainer.classList.add('border-transparent');
+
+                            // Optional: Fade out cursor after typing
+                            setTimeout(() => {
+                                typewriterContainer.style.borderRight = 'none';
+                            }, 2000);
+                        }
+                    }
+
+                    // Start animation when section is visible
+                    const aboutSection = typewriterContainer.closest('section') || document.body;
+                    const observer = new IntersectionObserver((entries) => {
+                        entries.forEach(entry => {
+                            if (entry.isIntersecting) {
+                                i = 0;
+                                typewriterElement.textContent = '';
+                                typeWriter();
+                                observer.unobserve(entry.target);
+                            }
+                        });
+                    });
+                    observer.observe(aboutSection);
+                </script>
+
+
+
+                <!-- Main grid -->
+                <div class="mt-10 grid gap-10 lg:grid-cols-2 lg:items-center">
+
+                    <!-- Left -->
+                    <div class="reveal">
+                        <p class="mt-3 text-zinc-300 leading-relaxed">
+                            I’m <span class="font-semibold text-zinc-100">Manan Soni</span> — a creator documenting
+                            <span class="font-semibold text-zinc-100">Travel Vlogs</span> and
+                            <span class="font-semibold text-zinc-100">Government Exam Preparation</span>.
+                            My content is built on real experiences, consistency, and practical guidance.
+                        </p>
+                        <p class="text-zinc-300 leading-relaxed">
+                            From exploring new places to sharing last-minute revision strategies, my goal is simple:
+                            help people stay motivated and grow through every phase of the journey.
+                        </p>
+
+                        <div class="mt-7 flex flex-wrap gap-2">
+                            <span class="chip"><i data-lucide="check" class="h-4 w-4"></i>Travel diaries</span>
+                            <span class="chip"><i data-lucide="check" class="h-4 w-4"></i>Govt exam prep</span>
+                            <span class="chip"><i data-lucide="check" class="h-4 w-4"></i>Shorts + quick tips</span>
+                            <span class="chip"><i data-lucide="check" class="h-4 w-4"></i>Real & honest content</span>
+                        </div>
+
+                        <!-- Small line -->
+                        <div class="mt-8 rounded-3xl border border-white/10 bg-white/5 p-5">
+                            <p class="text-sm font-semibold text-zinc-100">Focus</p>
+                            <p class="mt-2 text-sm text-zinc-300 leading-relaxed">
+                                Travel storytelling + practical government exam guidance, made in a clean and simple
+                                format.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Right (Image card) -->
+                    <div class="reveal aboutImg">
+                        <div
+                            class="relative overflow-hidden rounded-[28px] border border-white/10 bg-white/5 p-3 shadow-glow">
+
+                            <div class="overflow-hidden rounded-[22px] border border-white/10 bg-white/5">
+                                <img src="manan.jpeg" alt="Manan Soni"
+                                    class="h-[360px] w-full object-cover sm:h-[440px]" />
+                            </div>
+
+                            <div class="mt-4 flex items-center justify-between px-2 pb-2">
+                                <div>
+                                    <p class="text-sm font-semibold text-zinc-100">Manan Soni</p>
+                                    <p class="text-xs text-zinc-400">Travel Vlogs • Govt Exams</p>
+                                </div>
+
+                                <span
+                                    class="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs text-zinc-300">
+                                    Creator
+                                </span>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Compact cards -->
+                <div class="mt-12 grid gap-5 lg:grid-cols-3">
+
+                    <!-- Education -->
+                    <div class="reveal rounded-[28px] border border-white/10 bg-white/5 p-6">
+                        <div class="flex items-center gap-3">
+                            <i data-lucide="graduation-cap" class="h-5 w-5 text-indigo-200"></i>
+                            <p class="text-sm font-semibold text-zinc-100">Education</p>
+                        </div>
+
+                        <div class="mt-4 space-y-3 text-sm text-zinc-300">
+                            <p><span class="font-semibold text-zinc-100">MBA</span> (Finance & Marketing) • 2023 •
+                                73.91%</p>
+                            <p><span class="font-semibold text-zinc-100">B.Com</span> • 2021 • 62.83%</p>
+                            <p><span class="font-semibold text-zinc-100">12th (CBSE)</span> • 2018 • 80.6%</p>
+                            <p><span class="font-semibold text-zinc-100">10th (CBSE)</span> • 2016 • 79.8%</p>
+                        </div>
+                    </div>
+
+                    <!-- Work -->
+                    <div class="reveal rounded-[28px] border border-white/10 bg-white/5 p-6">
+                        <div class="flex items-center gap-3">
+                            <i data-lucide="briefcase" class="h-5 w-5 text-emerald-200"></i>
+                            <p class="text-sm font-semibold text-zinc-100">Work</p>
+                        </div>
+
+                        <div class="mt-4 space-y-3 text-sm text-zinc-300">
+                            <p>
+                                <span class="font-semibold text-zinc-100">IndiaMART</span> — Client Servicing Executive
+                                (Oct 2023 – Apr 2024)
+                            </p>
+                            <p>
+                                <span class="font-semibold text-zinc-100">H.C Bothra & Associates</span> — Under CA
+                                Nikhil Jain (2021)
+                            </p>
+                            <p>
+                                <span class="font-semibold text-zinc-100">DCM Kota</span> — Supervisor (2018 – 2021)
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Awards -->
+                    <div class="reveal rounded-[28px] border border-white/10 bg-white/5 p-6">
+                        <div class="flex items-center gap-3">
+                            <i data-lucide="award" class="h-5 w-5 text-amber-200"></i>
+                            <p class="text-sm font-semibold text-zinc-100">Awards & Certifications</p>
+                        </div>
+
+                        <div class="mt-4 space-y-3 text-sm text-zinc-300">
+                            <p>🏆 RNR Jan 2024 — Rising Star (IndiaMART)</p>
+                            <p>📌 Excel Skills for Business (Coursera)</p>
+                            <p>📌 TALLY ACE (Certified Tally Institute)</p>
+                            <p>📌 CorelDRAW (IT Campus, Kota)</p>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </section>
+
+        <!-- Channels -->
+        <section id="channels" class="mx-auto max-w-6xl px-4 py-12 sm:px-6 sm:py-16">
+            <div class="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+                <div>
+                    <h2 class="text-2xl font-semibold tracking-tight sm:text-3xl">YouTube channels</h2>
+                    <p class="mt-2 text-zinc-300">Three focused channels. One consistent creator brand.</p>
+                </div>
+                <a href="#videos"
+                    class="inline-flex items-center gap-2 text-sm font-semibold text-indigo-200 hover:text-indigo-100 transition">
+                    Explore latest videos <i data-lucide="arrow-right" class="h-4 w-4"></i>
+                </a>
+            </div>
+
+            <div class="mt-8 grid gap-5 lg:grid-cols-3">
+                <!-- Channel 1 -->
+                <article class="glass noise rounded-[28px] p-6 shadow-glow hover:translate-y-[-3px] transition">
+
+                    <div class="flex items-center gap-4">
+                        <div
+                            class="grid h-14 w-14 place-items-center rounded-2xl bg-gradient-to-br from-indigo-500/30 via-fuchsia-500/25 to-cyan-400/25 border border-white/10">
+                            <i data-lucide="map-pin" class="h-6 w-6 text-indigo-100"></i>
+                        </div>
+
+                        <div>
+                            <p class="text-lg font-semibold">Soniji Safarnama</p>
+                            <p class="text-sm text-zinc-400">@SonijiSafarnama • Travel Vlogs</p>
+                        </div>
+                    </div>
+
+                    <div class="mt-5 grid grid-cols-3 gap-3">
+                        <div class="rounded-2xl border border-white/10 bg-white/5 p-3">
+                            <p class="text-[11px] text-zinc-400">Subscribers</p>
+                            <p class="mt-1 text-sm font-semibold">330</p>
+                        </div>
+
+                        <div class="rounded-2xl border border-white/10 bg-white/5 p-3">
+                            <p class="text-[11px] text-zinc-400">Views</p>
+                            <p class="mt-1 text-sm font-semibold">—</p>
+                        </div>
+
+                        <div class="rounded-2xl border border-white/10 bg-white/5 p-3">
+                            <p class="text-[11px] text-zinc-400">Videos</p>
+                            <p class="mt-1 text-sm font-semibold">54</p>
+                        </div>
+                    </div>
+
+                    <div class="mt-6 flex flex-col gap-3 sm:flex-row">
+                        <a target="_blank" href="https://www.youtube.com/@SonijiSafarnama" class="btn-primary w-full">
+                            <i data-lucide="youtube" class="h-4 w-4"></i>
+                            Visit Channel
+                        </a>
+
+                        <button class="btn-secondary w-full" data-filter="travel">
+                            <i data-lucide="film" class="h-4 w-4"></i>
+                            View Videos
+                        </button>
+                    </div>
+
+                </article>
+
+
+                <!-- Channel 2 -->
+                <article class="glass noise rounded-[28px] p-6 shadow-glow hover:translate-y-[-3px] transition">
+                    <div class="flex items-center gap-4">
+                        <div
+                            class="grid h-14 w-14 place-items-center rounded-2xl bg-gradient-to-br from-emerald-400/20 via-sky-400/20 to-indigo-500/25 border border-white/10">
+                            <i data-lucide="book-open-check" class="h-6 w-6 text-emerald-100"></i>
+                        </div>
+
+                        <div>
+                            <p class="text-lg font-semibold">Last Minute Brushup</p>
+                            <p class="text-sm text-zinc-400">@lastminutebrushup • Govt Exam Prep</p>
+                        </div>
+                    </div>
+
+                    <div class="mt-5 grid grid-cols-3 gap-3">
+                        <div class="rounded-2xl border border-white/10 bg-white/5 p-3">
+                            <p class="text-[11px] text-zinc-400">Subscribers</p>
+                            <p class="mt-1 text-sm font-semibold">1.28K</p>
+                        </div>
+
+                        <div class="rounded-2xl border border-white/10 bg-white/5 p-3">
+                            <p class="text-[11px] text-zinc-400">Views</p>
+                            <p class="mt-1 text-sm font-semibold">—</p>
+                        </div>
+
+                        <div class="rounded-2xl border border-white/10 bg-white/5 p-3">
+                            <p class="text-[11px] text-zinc-400">Videos</p>
+                            <p class="mt-1 text-sm font-semibold">37</p>
+                        </div>
+                    </div>
+
+                    <div class="mt-6 flex flex-col gap-3 sm:flex-row">
+                        <a target="_blank" href="https://www.youtube.com/@lastminutebrushup" class="btn-primary w-full">
+                            <i data-lucide="youtube" class="h-4 w-4"></i>
+                            Visit Channel
+                        </a>
+
+                        <button class="btn-secondary w-full" data-filter="exam">
+                            <i data-lucide="film" class="h-4 w-4"></i>
+                            View Videos
+                        </button>
+                    </div>
+                </article>
+
+
+                <!-- Channel 3 -->
+                <article
+                    class="glass noise rounded-[28px] p-6 shadow-glow hover:translate-y-[-3px] transition relative overflow-hidden">
+
+                    <!-- Soft highlight glow -->
+                    <div
+                        class="pointer-events-none absolute -top-24 -right-24 h-56 w-56 rounded-full bg-gradient-to-br from-amber-400/30 via-fuchsia-400/15 to-cyan-400/10 blur-3xl">
+                    </div>
+
+                    <div class="relative">
+                        <div class="flex items-center gap-4">
+                            <div
+                                class="grid h-14 w-14 place-items-center rounded-2xl bg-gradient-to-br from-amber-400/25 via-fuchsia-400/15 to-cyan-400/15 border border-white/10">
+                                <i data-lucide="newspaper" class="h-6 w-6 text-amber-100"></i>
+                            </div>
+
+                            <div class="flex-1">
+                                <div class="flex items-center justify-between gap-3">
+                                    <div>
+                                        <p class="text-lg font-semibold">News Simplify</p>
+                                        <p class="text-sm text-zinc-400">@NewsSimplify • News Explained</p>
+                                    </div>
+
+                                    <span
+                                        class="rounded-full bg-white/5 px-3 py-1 text-xs font-medium text-zinc-200 border border-white/10">
+                                        Earlier Work
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mt-5 grid grid-cols-3 gap-3">
+                            <div class="rounded-2xl border border-white/10 bg-white/5 p-3">
+                                <p class="text-[11px] text-zinc-400">Subscribers</p>
+                                <p class="mt-1 text-sm font-semibold">992</p>
+                            </div>
+
+                            <div class="rounded-2xl border border-white/10 bg-white/5 p-3">
+                                <p class="text-[11px] text-zinc-400">Views</p>
+                                <p class="mt-1 text-sm font-semibold">—</p>
+                            </div>
+
+                            <div class="rounded-2xl border border-white/10 bg-white/5 p-3">
+                                <p class="text-[11px] text-zinc-400">Videos</p>
+                                <p class="mt-1 text-sm font-semibold">101</p>
+                            </div>
+                        </div>
+
+                        <p class="mt-4 text-sm text-zinc-300 leading-relaxed">
+                            A channel where Manan contributed in the early phase — part of the creator journey and
+                            learning.
+                        </p>
+
+                        <div class="mt-6 flex flex-col gap-3 sm:flex-row">
+                            <a target="_blank" href="https://www.youtube.com/@NewsSimplify" class="btn-primary w-full">
+                                <i data-lucide="youtube" class="h-4 w-4"></i>
+                                Visit Channel
+                            </a>
+
+                            <button class="btn-secondary w-full" data-filter="news">
+                                <i data-lucide="film" class="h-4 w-4"></i>
+                                View Videos
+                            </button>
+                        </div>
+                    </div>
+                </article>
+
+
+            </div>
+        </section>
+
+        <!-- Latest Videos -->
+        <section id="videos" class="mx-auto max-w-6xl px-4 py-12 sm:px-6 sm:py-16">
+            <div class="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+                <div class="reveal">
+                    <h2 class="text-2xl font-semibold tracking-tight sm:text-3xl">Latest videos</h2>
+                    <p class="mt-2 text-zinc-300">
+                        Filter by channel to showcase different content styles.
+                    </p>
+                </div>
+
+                <div class="glass inline-flex flex-wrap gap-2 rounded-3xl p-2 shadow-glow reveal">
+                    <button class="filterBtn filter-active" data-channel="all">All</button>
+                    <button class="filterBtn" data-channel="travel">Soniji Safarnama</button>
+                    <button class="filterBtn" data-channel="exam">Last Minute Brushup</button>
+                    <button class="filterBtn" data-channel="news">News Simplify</button>
+                </div>
+            </div>
+
+            <!-- Video Grid -->
+            <div id="videoGrid" class="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+
+                <!-- Travel -->
+                <a class="videoCard reveal" data-channel="travel" target="_blank"
+                    href="https://youtu.be/ThBynniCoro?si=Zy927EymI4zubTAC">
+                    <div class="thumb">
+                        <img src="https://img.youtube.com/vi/ThBynniCoro/hqdefault.jpg" alt="Travel Video"
+                            class="thumbImg" />
+                        <div class="badge">Soniji Safarnama</div>
+                        <div class="play"><i data-lucide="play" class="h-5 w-5"></i></div>
+                    </div>
+                    <div class="p-5">
+                        <p class="text-sm font-semibold">Kalpeshwar Mahadev</p>
+                        <p class="mt-2 text-xs text-zinc-400">Travel • YouTube</p>
+                    </div>
+                </a>
+
+
+                <a class="videoCard reveal" data-channel="travel" target="_blank"
+                    href="https://youtu.be/o-ethw7Yp9g?si=ZVPMmvyMrK0fDseD">
+                    <div class="thumb">
+                        <img src="https://img.youtube.com/vi/o-ethw7Yp9g/hqdefault.jpg" alt="Travel Video"
+                            class="thumbImg" />
+                        <div class="badge">Soniji Safarnama</div>
+                        <div class="play"><i data-lucide="play" class="h-5 w-5"></i></div>
+                    </div>
+                    <div class="p-5">
+                        <p class="text-sm font-semibold">Char Dham Yatra 2025 complete information</p>
+                        <p class="mt-2 text-xs text-zinc-400">Travel • YouTube</p>
+                    </div>
+                </a>
+
+
+                <!-- Exam -->
+                <a class="videoCard reveal" data-channel="exam" target="_blank"
+                    href="https://youtu.be/RNPd6d4PWFo?si=Ds-34OOu7AojZB89">
+                    <div class="thumb">
+                        <img src="https://img.youtube.com/vi/RNPd6d4PWFo/hqdefault.jpg" alt="Exam Video"
+                            class="thumbImg" />
+                        <div class="badge">Last Minute Brushup</div>
+                        <div class="play"><i data-lucide="play" class="h-5 w-5"></i></div>
+                    </div>
+                    <div class="p-5">
+                        <p class="text-sm font-semibold">Complete AVERAGE in one shot under 40 minutes for SSC CGL</p>
+                        <p class="mt-2 text-xs text-zinc-400">Govt Exam • YouTube</p>
+                    </div>
+                </a>
+
+
+                <a class="videoCard reveal" data-channel="exam" target="_blank"
+                    href="https://youtu.be/W6vhqTBBhbI?si=Ok7vFetDEx11Ge1G">
+                    <div class="thumb">
+                        <img src="https://img.youtube.com/vi/W6vhqTBBhbI/hqdefault.jpg" alt="Exam Video"
+                            class="thumbImg" />
+                        <div class="badge">Last Minute Brushup</div>
+                        <div class="play"><i data-lucide="play" class="h-5 w-5"></i></div>
+                    </div>
+                    <div class="p-5">
+                        <p class="text-sm font-semibold">Complete Geometry in 2 hours in one shot for SSC CGL</p>
+                        <p class="mt-2 text-xs text-zinc-400">Govt Exam • YouTube</p>
+                    </div>
+                </a>
+
+
+                <!-- News -->
+                <a class="videoCard reveal" data-channel="news" target="_blank"
+                    href="https://youtube.com/shorts/f-OSo6ld91A?si=Maog_m0-YOVGsXPF">
+                    <div class="thumb">
+                        <img src="https://img.youtube.com/vi/f-OSo6ld91A/hqdefault.jpg" alt="News Video"
+                            class="thumbImg" />
+                        <div class="badge">News Simplify</div>
+                        <div class="play"><i data-lucide="play" class="h-5 w-5"></i></div>
+                    </div>
+                    <div class="p-5">
+                        <p class="text-sm font-semibold">Noida Accident: Death of Humanity?</p>
+                        <p class="mt-2 text-xs text-zinc-400">News • YouTube Shorts</p>
+                    </div>
+                </a>
+
+
+                <a class="videoCard reveal" data-channel="news" target="_blank"
+                    href="https://youtube.com/shorts/h5heI5mnkV0?si=4eImbOM7vjZxalFY">
+                    <div class="thumb">
+                        <img src="https://img.youtube.com/vi/h5heI5mnkV0/hqdefault.jpg" alt="News Video"
+                            class="thumbImg" />
+                        <div class="badge">News Simplify</div>
+                        <div class="play"><i data-lucide="play" class="h-5 w-5"></i></div>
+                    </div>
+                    <div class="p-5">
+                        <p class="text-sm font-semibold">India Open Shame: Bird Nests & Pollution Ruining Sports?</p>
+                        <p class="mt-2 text-xs text-zinc-400">News • YouTube Shorts</p>
+                    </div>
+                </a>
+
+
+            </div>
+        </section>
+
+
+
+        <!-- Contact -->
+        <!-- Contact -->
+       <section id="contact" class="mx-auto max-w-3xl px-4 py-12 sm:px-6 sm:py-16 text-center">
+    
+    <div class="grid gap-10 place-items-center">
+
+        <!-- Content -->
+        <div>
+            <h2 class="text-2xl font-semibold tracking-tight sm:text-3xl">
+                Contact & collaborations
+            </h2>
+
+            <p class="mt-2 text-zinc-300 leading-relaxed">
+                Want to collaborate? Send a message with your brand, goals, and timeline.
+                I typically respond within 24–48 hours.
+            </p>
+
+            <div class="mt-7 grid gap-3 text-left">
+                
+                <!-- YouTube -->
+                <a target="_blank" href="https://www.youtube.com/@lastminutebrushup" class="socialRow">
+                    <i data-lucide="youtube" class="h-5 w-5 text-red-200"></i>
+                    <div>
+                        <p class="text-sm font-semibold">YouTube</p>
+                        <p class="text-xs text-zinc-400">@lastminutebrushup</p>
+                    </div>
+                    <i data-lucide="arrow-up-right" class="h-4 w-4 text-zinc-400"></i>
+                </a>
+
+                <!-- Instagram -->
+                <a target="_blank"
+                    href="https://www.instagram.com/last_minute_brushup"
+                    class="socialRow">
+                    <i data-lucide="instagram" class="h-5 w-5 text-fuchsia-200"></i>
+                    <div>
+                        <p class="text-sm font-semibold">Instagram</p>
+                        <p class="text-xs text-zinc-400">last_minute_brushup</p>
+                    </div>
+                    <i data-lucide="arrow-up-right" class="h-4 w-4 text-zinc-400"></i>
+                </a>
+
+                <!-- Email -->
+                <a href="mailto:manansoni903@gmail.com" class="socialRow">
+                    <i data-lucide="mail" class="h-5 w-5 text-indigo-200"></i>
+                    <div>
+                        <p class="text-sm font-semibold">Email</p>
+                        <p class="text-xs text-zinc-400">manansoni903@gmail.com</p>
+                    </div>
+                    <i data-lucide="arrow-up-right" class="h-4 w-4 text-zinc-400"></i>
+                </a>
+
+                <!-- Phone -->
+               <a href="tel:+919694665254" class="socialRow">
+    <i data-lucide="phone" class="h-5 w-5 text-green-200"></i>
+    <div>
+        <p class="text-sm font-semibold">Phone</p>
+        <p class="text-xs text-zinc-400">+91 9694665254</p>
+    </div>
+    <i data-lucide="arrow-up-right" class="h-4 w-4 text-zinc-400"></i>
+</a>
+
+
+            </div>
+        </div>
+
+    </div>
+</section>
+
+
+</body>
+
+</html>
+
+
+<button class="btn-primary" type="submit">
+    <i data-lucide="send" class="h-4 w-4"></i>
+    Send Message
+</button>
+
+<p id="formToast" class="hidden text-sm text-emerald-200">✅ Message sent (demo). Replace with
+    real backend.</p>
+</form>
+</div>
+</div>
+</section>
+
+<!-- Footer -->
+<footer class="border-t border-white/10 py-12 px-6 text-center">
+    <div class="max-w-6xl mx-auto flex flex-col sm:flex-row gap-8 items-center justify-center mb-8">
+
+        <!-- YouTube -->
+        <a href="https://www.youtube.com/@SonijiSafarnama" target="_blank"
+            class="w-16 h-16 glass rounded-3xl flex items-center justify-center hover-lift shadow-xl group">
+            <i
+                class="fab fa-youtube text-2xl text-red-400 group-hover:scale-110 group-hover:text-red-300 transition-all duration-300"></i>
+        </a>
+
+        <!-- Instagram -->
+        <a href="https://www.instagram.com/last_minute_brushup?utm_source=qr&igsh=Z3plODBuNmFkNmFj" target="_blank"
+            class="w-16 h-16 glass rounded-3xl flex items-center justify-center hover-lift shadow-xl group">
+            <i
+                class="fab fa-instagram text-2xl text-pink-400 group-hover:scale-110 group-hover:text-pink-300 transition-all duration-300"></i>
+        </a>
+
+        <!-- Email -->
+        <a href="manansoni903@gmail.com "
+            class="w-16 h-16 glass rounded-3xl flex items-center justify-center hover-lift shadow-xl group">
+            <i
+                class="fas fa-envelope text-2xl text-white group-hover:scale-110 group-hover:text-purple-400 transition-all duration-300"></i>
+        </a>
+
+    </div>
+
+    <p class="text-xs opacity-50">© <span id="year"></span>. All rights reserved.</p>
+</footer>
+<script>
+    document.getElementById("year").textContent = new Date().getFullYear();
+</script>
+
+
+
+<script>
+    // Auto update year
+    document.getElementById('year').textContent = new Date().getFullYear();
+</script>
+
+</main>
+
+<!-- Utilities (component classes) -->
+<style>
+    .navlink {
+        padding: 10px 14px;
+        border-radius: 16px;
+        font-size: 14px;
+        color: rgb(212 212 216);
+        transition: 180ms ease;
+    }
+
+    .navlink:hover {
+        background: rgba(255, 255, 255, .06);
+        color: white;
+    }
+
+    .btn-primary {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        border-radius: 18px;
+        padding: 12px 16px;
+        font-weight: 700;
+        font-size: 14px;
+        background: linear-gradient(90deg, rgba(99, 102, 241, 1), rgba(217, 70, 239, 1), rgba(34, 211, 238, 1));
+        color: rgb(9 9 11);
+        border: 1px solid rgba(255, 255, 255, .10);
+        box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.06), 0 14px 35px rgba(0, 0, 0, 0.45);
+        transition: 180ms ease;
+    }
+
+    .btn-primary:hover {
+        opacity: .95;
+        transform: translateY(-1px);
+    }
+
+    .btn-secondary {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        border-radius: 18px;
+        padding: 12px 16px;
+        font-weight: 700;
+        font-size: 14px;
+        background: rgba(255, 255, 255, .05);
+        color: rgb(244 244 245);
+        border: 1px solid rgba(255, 255, 255, .10);
+        transition: 180ms ease;
+    }
+
+    .btn-secondary:hover {
+        background: rgba(255, 255, 255, .08);
+        transform: translateY(-1px);
+    }
+
+    .chip {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        border-radius: 999px;
+        padding: 8px 12px;
+        font-size: 13px;
+        color: rgb(228 228 231);
+        border: 1px solid rgba(255, 255, 255, .10);
+        background: rgba(255, 255, 255, .04);
+    }
+
+    .filterBtn {
+        border-radius: 999px;
+        padding: 10px 14px;
+        font-size: 13px;
+        font-weight: 700;
+        color: rgb(212 212 216);
+        border: 1px solid rgba(255, 255, 255, .10);
+        background: rgba(255, 255, 255, .03);
+        transition: 180ms ease;
+    }
+
+    .filterBtn:hover {
+        background: rgba(255, 255, 255, .06);
+        color: white;
+    }
+
+    .filter-active {
+        background: rgba(99, 102, 241, .18);
+        color: white;
+        border-color: rgba(99, 102, 241, .35);
+    }
+
+    .videoCard {
+        overflow: hidden;
+        border-radius: 28px;
+        border: 1px solid rgba(255, 255, 255, .10);
+        background: rgba(255, 255, 255, .04);
+        box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.06), 0 14px 35px rgba(0, 0, 0, 0.45);
+        transition: 220ms ease;
+    }
+
+    .videoCard:hover {
+        transform: translateY(-4px);
+        background: rgba(255, 255, 255, .055);
+    }
+
+    .thumb {
+        position: relative;
+        aspect-ratio: 16 / 9;
+        background: linear-gradient(120deg, rgba(99, 102, 241, .20), rgba(217, 70, 239, .16), rgba(34, 211, 238, .14));
+        border-bottom: 1px solid rgba(255, 255, 255, .10);
+    }
+
+    .thumb::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        opacity: .25;
+        background-image: radial-gradient(circle at 20% 20%, rgba(255, 255, 255, .22), transparent 50%),
+            radial-gradient(circle at 80% 30%, rgba(255, 255, 255, .18), transparent 55%),
+            radial-gradient(circle at 50% 80%, rgba(255, 255, 255, .12), transparent 60%);
+    }
+
+    .badge {
+        position: absolute;
+        top: 12px;
+        left: 12px;
+        z-index: 2;
+        font-size: 11px;
+        font-weight: 800;
+        padding: 8px 10px;
+        border-radius: 999px;
+        border: 1px solid rgba(255, 255, 255, .12);
+        background: rgba(0, 0, 0, .35);
+        backdrop-filter: blur(10px);
+    }
+
+    .play {
+        position: absolute;
+        inset: 0;
+        z-index: 2;
+        display: grid;
+        place-items: center;
+        opacity: .9;
+    }
+
+    .play>div,
+    .play svg {
+        filter: drop-shadow(0 10px 20px rgba(0, 0, 0, .35));
+    }
+
+    .topicCard {
+        display: flex;
+        gap: 12px;
+        align-items: center;
+        border-radius: 24px;
+        padding: 16px;
+        border: 1px solid rgba(255, 255, 255, .10);
+        background: rgba(255, 255, 255, .04);
+        transition: 180ms ease;
+    }
+
+    .topicCard:hover {
+        background: rgba(255, 255, 255, .06);
+        transform: translateY(-2px);
+    }
+
+    .badgeChip {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        border-radius: 999px;
+        padding: 10px 12px;
+        font-size: 13px;
+        font-weight: 700;
+        color: rgb(228 228 231);
+        border: 1px solid rgba(255, 255, 255, .10);
+        background: rgba(255, 255, 255, .04);
+        transition: 180ms ease;
+    }
+
+    .badgeChip:hover {
+        background: rgba(255, 255, 255, .07);
+    }
+
+    .input {
+        width: 100%;
+        margin-top: 8px;
+        border-radius: 18px;
+        padding: 12px 14px;
+        border: 1px solid rgba(255, 255, 255, .10);
+        background: rgba(255, 255, 255, .04);
+        color: white;
+        transition: 180ms ease;
+    }
+
+    .input::placeholder {
+        color: rgba(228, 228, 231, .45);
+    }
+
+    .input:focus {
+        border-color: rgba(99, 102, 241, .45);
+        background: rgba(255, 255, 255, .05);
+    }
+
+    .iconBtn {
+        display: inline-flex;
+        height: 44px;
+        width: 44px;
+        align-items: center;
+        justify-content: center;
+        border-radius: 18px;
+        border: 1px solid rgba(255, 255, 255, .10);
+        background: rgba(255, 255, 255, .04);
+        transition: 180ms ease;
+    }
+
+    .iconBtn:hover {
+        background: rgba(255, 255, 255, .08);
+        transform: translateY(-1px);
+    }
+
+    .socialRow {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        border-radius: 24px;
+        border: 1px solid rgba(255, 255, 255, .10);
+        background: rgba(255, 255, 255, .04);
+        padding: 16px;
+        transition: 180ms ease;
+    }
+
+    .socialRow:hover {
+        background: rgba(255, 255, 255, .07);
+        transform: translateY(-2px);
+    }
+
+    .socialRow>div {
+        flex: 1;
+    }
+
+    /* Video filtering fade */
+    .fadeOut {
+        opacity: 0;
+        transform: translateY(6px);
+        pointer-events: none;
+    }
+
+    .fadeIn {
+        opacity: 1;
+        transform: translateY(0);
+        pointer-events: auto;
+    }
+</style>
+
+<script>
+    window.addEventListener("DOMContentLoaded", () => {
+        document.body.classList.add("ready");
+
+        if (window.lucide) lucide.createIcons();
+
+        initMobileMenu();
+        initSmoothScroll();
+        initCounters();
+        initVideoFilter();
+        initFooterYear();
+        initContactForm();
+        initReveal();
+    });
+
+    // --- Mobile menu ---
+    function initMobileMenu() {
+        const menuBtn = document.getElementById("menuBtn");
+        const mobileMenu = document.getElementById("mobileMenu");
+
+        menuBtn?.addEventListener("click", () => {
+            mobileMenu.classList.toggle("hidden");
+        });
+
+        mobileMenu?.querySelectorAll("a").forEach((a) => {
+            a.addEventListener("click", () => mobileMenu.classList.add("hidden"));
+        });
+    }
+
+    // --- Smooth scroll (with header offset) ---
+    function initSmoothScroll() {
+        const headerOffset = 88;
+
+        document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
+            anchor.addEventListener("click", (e) => {
+                const id = anchor.getAttribute("href");
+                if (!id || id === "#") return;
+
+                const target = document.querySelector(id);
+                if (!target) return;
+
+                e.preventDefault();
+
+                const elementPosition = target.getBoundingClientRect().top;
+                const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+
+                window.scrollTo({
+                    top: offsetPosition,
+                    behavior: "smooth",
+                });
+            });
+        });
+    }
+
+    // --- Animated counters ---
+    function initCounters() {
+        const counters = document.querySelectorAll(".counter");
+        if (!counters.length) return;
+
+        const formatNumber = (num) => {
+            if (num >= 1_000_000_000) return (num / 1_000_000_000).toFixed(1).replace(/\.0$/, "") + "B";
+            if (num >= 1_000_000) return (num / 1_000_000).toFixed(1).replace(/\.0$/, "") + "M";
+            if (num >= 1_000) return (num / 1_000).toFixed(1).replace(/\.0$/, "") + "K";
+            return String(Math.round(num));
+        };
+
+        const animateCounter = (el) => {
+            const target = Number(el.dataset.target || 0);
+            const duration = 1100;
+            const start = performance.now();
+
+            const tick = (now) => {
+                const progress = Math.min((now - start) / duration, 1);
+                const eased = 1 - Math.pow(1 - progress, 3);
+                const current = target * eased;
+                el.textContent = formatNumber(current);
+                if (progress < 1) requestAnimationFrame(tick);
+            };
+
+            requestAnimationFrame(tick);
+        };
+
+        const io = new IntersectionObserver(
+            (entries) => {
+                entries.forEach((entry) => {
+                    if (entry.isIntersecting) {
+                        animateCounter(entry.target);
+                        io.unobserve(entry.target);
+                    }
+                });
+            },
+            { threshold: 0.35 }
+        );
+
+        counters.forEach((c) => io.observe(c));
+    }
+
+    // --- Video Filter ---
+    function initVideoFilter() {
+        const buttons = document.querySelectorAll(".filterBtn");
+        const cards = document.querySelectorAll(".videoCard");
+
+        if (!buttons.length || !cards.length) return;
+
+        const setActive = (btn) => {
+            buttons.forEach((b) => b.classList.remove("filter-active"));
+            btn.classList.add("filter-active");
+        };
+
+        const applyFilter = (channel) => {
+            cards.forEach((card) => {
+                const matches = channel === "all" || card.dataset.channel === channel;
+
+                if (matches) {
+                    card.style.display = "block";
+                    requestAnimationFrame(() => {
+                        card.classList.remove("hideCard");
+                        card.classList.add("showCard");
+                    });
+                } else {
+                    card.classList.remove("showCard");
+                    card.classList.add("hideCard");
+
+                    setTimeout(() => {
+                        card.style.display = "none";
+                    }, 260);
+                }
+            });
+
+            if (window.lucide) lucide.createIcons();
+        };
+
+        // initial
+        cards.forEach((card) => {
+            card.classList.add("showCard");
+            card.classList.remove("hideCard");
+            card.style.display = "block";
+        });
+
+        buttons.forEach((btn) => {
+            btn.addEventListener("click", () => {
+                const channel = btn.dataset.channel;
+                setActive(btn);
+                applyFilter(channel);
+            });
+        });
+
+        // View Videos buttons
+        document.querySelectorAll("[data-filter]").forEach((btn) => {
+            btn.addEventListener("click", () => {
+                const channel = btn.dataset.filter;
+
+                const target = document.getElementById("videos");
+                if (!target) return;
+
+                const y = target.getBoundingClientRect().top + window.pageYOffset - 88;
+                window.scrollTo({ top: y, behavior: "smooth" });
+
+                setTimeout(() => {
+                    const filterBtn = document.querySelector(`.filterBtn[data-channel="${channel}"]`);
+                    if (filterBtn) filterBtn.click();
+                }, 250);
+            });
+        });
+    }
+
+    // --- Footer year ---
+    function initFooterYear() {
+        const y = document.getElementById("year");
+        if (y) y.textContent = new Date().getFullYear();
+    }
+
+    // --- Contact form demo ---
+    function initContactForm() {
+        const form = document.getElementById("contactForm");
+        const toast = document.getElementById("formToast");
+
+        form?.addEventListener("submit", (e) => {
+            e.preventDefault();
+            toast?.classList.remove("hidden");
+            setTimeout(() => toast?.classList.add("hidden"), 3200);
+            form.reset();
+        });
+    }
+
+    // --- Reveal animation ---
+    function initReveal() {
+        const revealEls = document.querySelectorAll(".reveal");
+        if (!revealEls.length) return;
+
+        const revealObserver = new IntersectionObserver(
+            (entries) => {
+                entries.forEach((entry) => {
+                    if (entry.isIntersecting) entry.target.classList.add("show");
+                });
+            },
+            { threshold: 0.18 }
+        );
+
+        revealEls.forEach((el) => revealObserver.observe(el));
+    }
+</script>
+
+</body>
+
+</html>
